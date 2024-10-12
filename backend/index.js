@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://shubhajit2003:OKxyM2lh3FyQ96sO@cluster0.pmehu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+mongoose.connect('mongodb://localhost:27017/quizdb');
 
 // User Schema
 const userSchema = new mongoose.Schema({
