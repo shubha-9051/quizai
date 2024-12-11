@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { extractTextFromPDF } from './utils/pdfUtils'; // Adjust the path as needed
+import { generateQuestionsFromPromt } from './utils/prompt';
 import { generateQuestionsFromText } from './utils/groqUtils'; // Adjust the path as needed
 
 function QuizCreation() {
@@ -11,6 +12,7 @@ function QuizCreation() {
   const [image, setImage] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [timer, setTimer] = useState('none');
+  const [prompt, setPrompt] = useState('');
 
   useEffect(() => {
     console.log('Questions state updated:', questions); // Debugging: Log questions array whenever it updates
@@ -155,6 +157,22 @@ function QuizCreation() {
     setTimer(e.target.value);
   };
 
+  const handlePromptChange = (e) => {
+    setPrompt(e.target.value);
+  };
+
+  const handleGenerateQuestions = async () => {
+    try {
+      const generatedQuestions = await generateQuestionsFromPromt(prompt);
+      const parsedQuestions = JSON.parse(generatedQuestions);
+      setQuestions(parsedQuestions.questions);
+      console.log('Questions generated from prompt:', parsedQuestions);
+    } catch (error) {
+      console.error('Error generating questions from prompt:', error);
+      alert('Failed to generate questions from prompt');
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md">
@@ -220,6 +238,20 @@ function QuizCreation() {
             onChange={handleImageChange}
             className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
+          <input
+            type="text"
+            placeholder="Enter prompt to generate questions"
+            value={prompt}
+            onChange={handlePromptChange}
+            className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <button
+            type="button"
+            onClick={handleGenerateQuestions}
+            className="w-full px-4 py-2 font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            Generate Questions from Prompt
+          </button>
           <button
             type="button"
             onClick={handleAddQuestion}
