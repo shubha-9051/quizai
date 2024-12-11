@@ -1,12 +1,15 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//comment added
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve static files from the "uploads" directory
 
 mongoose.connect('mongodb://localhost:27017/quizdb');
 
@@ -30,6 +33,7 @@ const quizSchema = new mongoose.Schema({
     },
   ],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  timer: { type: String, enum: ['none', '10min', '30min', '1hr', '2hr'], default: 'none' },
 });
 
 const Quiz = mongoose.model('Quiz', quizSchema);
@@ -57,8 +61,6 @@ app.post('/register', async (req, res) => {
 });
 
 // Login route
-// Login route
-// Login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
@@ -72,6 +74,7 @@ app.post('/login', async (req, res) => {
   const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
   res.json({ token, role: user.role }); // Include role in the response
 });
+
 // Middleware to authenticate JWT
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -99,14 +102,38 @@ const isTeacher = (req, res, next) => {
   next();
 };
 
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
 // Route to create a quiz (only for teachers)
-app.post('/quizzes', authenticateJWT, isTeacher, async (req, res) => {
-  const { questions } = req.body;
+app.post('/quizzes', authenticateJWT, isTeacher, upload.any(), async (req, res) => {
+  const { questions, timer } = req.body;
   if (!questions || questions.length === 0) {
     return res.status(400).send('Quiz must have at least one question');
   }
+
+  // Parse questions and attach image URLs
+  const parsedQuestions = JSON.parse(questions);
+  if (req.files) {
+    req.files.forEach((file) => {
+      const index = file.fieldname.split('-')[1];
+      if (parsedQuestions[index]) {
+        parsedQuestions[index].image = `/uploads/${file.filename}`;
+      }
+    });
+  }
+
   try {
-    const quiz = new Quiz({ questions, createdBy: req.user.id });
+    const quiz = new Quiz({ questions: parsedQuestions, timer, createdBy: req.user.id });
     await quiz.save();
     res.status(201).send('Quiz created');
   } catch (error) {
@@ -125,6 +152,7 @@ app.get('/quizzes', authenticateJWT, async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 app.get('/quizzes/:quizId', authenticateJWT, async (req, res) => {
   const { quizId } = req.params;
   try {
@@ -138,7 +166,7 @@ app.get('/quizzes/:quizId', authenticateJWT, async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
-// Route to submit quiz answers
+
 // Route to submit quiz answers
 app.post('/quizzes/:quizId/submit', authenticateJWT, async (req, res) => {
   const { quizId } = req.params;
@@ -178,6 +206,7 @@ app.post('/quizzes/:quizId/submit', authenticateJWT, async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 // Route to get the leaderboard for a specific quiz
 app.get('/quizzes/:quizId/leaderboard', authenticateJWT, async (req, res) => {
   const { quizId } = req.params;
@@ -192,6 +221,7 @@ app.get('/quizzes/:quizId/leaderboard', authenticateJWT, async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 // Route to get quizzes created by the logged-in teacher
 app.get('/teacher/quizzes', authenticateJWT, isTeacher, async (req, res) => {
   try {

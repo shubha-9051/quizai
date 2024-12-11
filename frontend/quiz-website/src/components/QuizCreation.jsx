@@ -8,8 +8,9 @@ function QuizCreation() {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctOption, setCorrectOption] = useState(null);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
+  const [timer, setTimer] = useState('none');
 
   useEffect(() => {
     console.log('Questions state updated:', questions); // Debugging: Log questions array whenever it updates
@@ -34,7 +35,7 @@ function QuizCreation() {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.value);
+    setImage(e.target.files[0]);
   };
 
   const handleAddQuestion = () => {
@@ -47,7 +48,7 @@ function QuizCreation() {
       question: currentQuestion,
       options: options,
       correctOption: correctOption,
-      image: image,
+      image: image, // Store the file object itself
     };
 
     setQuestions((prevQuestions) => {
@@ -64,7 +65,7 @@ function QuizCreation() {
     setCurrentQuestion('');
     setOptions(['', '', '', '']);
     setCorrectOption(null);
-    setImage('');
+    setImage(null);
   };
 
   const handleEditQuestion = (index) => {
@@ -72,7 +73,7 @@ function QuizCreation() {
     setCurrentQuestion(question.question);
     setOptions(question.options);
     setCorrectOption(question.correctOption);
-    setImage(question.image);
+    setImage(null); // Reset image input
     setEditIndex(index);
   };
 
@@ -94,10 +95,25 @@ function QuizCreation() {
         alert('Quiz must have at least one question');
         return;
       }
+
+      const formData = new FormData();
+      formData.append('timer', timer);
+      formData.append('questions', JSON.stringify(questions.map((q, index) => ({
+        ...q,
+        image: q.image ? `image-${index}` : null,
+      }))));
+
+      questions.forEach((q, index) => {
+        if (q.image) {
+          formData.append(`image-${index}`, q.image);
+        }
+      });
+
       console.log('Submitting quiz:', questions); // Debugging: Log questions array before submission
-      const response = await axios.post('http://localhost:3000/quizzes', { questions }, {
+      const response = await axios.post('http://localhost:3000/quizzes', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
       alert('Quiz submitted successfully');
@@ -135,10 +151,27 @@ function QuizCreation() {
     }
   };
 
+  const handleTimerChange = (e) => {
+    setTimer(e.target.value);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md">
         <h2 className="mb-6 text-2xl font-semibold text-center text-gray-700">Quiz Creation</h2>
+        <div className="flex justify-end mb-4">
+          <select
+            value={timer}
+            onChange={handleTimerChange}
+            className="px-2 py-1 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            <option value="none">No Timer</option>
+            <option value="10min">10 Minutes</option>
+            <option value="30min">30 Minutes</option>
+            <option value="1hr">1 Hour</option>
+            <option value="2hr">2 Hours</option>
+          </select>
+        </div>
         <div className="space-y-4">
           <input
             type="file"
@@ -182,9 +215,8 @@ function QuizCreation() {
             Add Option
           </button>
           <input
-            type="text"
-            placeholder="Image URL (optional)"
-            value={image}
+            type="file"
+            accept="image/*"
             onChange={handleImageChange}
             className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
@@ -221,7 +253,7 @@ function QuizCreation() {
                       </button>
                     </div>
                   </div>
-                  {question.image && <img src={question.image} alt="Question" className="mb-4 rounded-lg" />}
+                  {question.image && <img src={URL.createObjectURL(question.image)} alt="Question" className="mb-4 rounded-lg" />}
                   <ul className="space-y-2">
                     {question.options.map((option, oIndex) => (
                       <li key={oIndex} className={`flex items-center ${question.correctOption === oIndex ? 'text-green-600' : 'text-gray-700'}`}>
