@@ -8,12 +8,14 @@ import QuizTaking from './components/QuizTaking';
 import Leaderboard from './components/Leaderboard';
 import TeacherDashboard from './components/TeacherDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Homepage from './components/Homepage';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/homepage" />} />
+        <Route path="/homepage" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/quiz-creation" element={<ProtectedRoute component={QuizCreation} />} />

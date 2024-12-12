@@ -119,63 +119,81 @@ function QuizTaking() {
   const progress = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md">
-        <h2 className="mb-6 text-2xl font-semibold text-center text-blue-600">Take Quiz</h2>
-        {remainingTime !== null && (
-          <div className="mb-4 text-center text-red-600">
-            Time Remaining: {formatTime(remainingTime)}
-          </div>
-        )}
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
-        </div>
-        <div className="mb-4 text-center text-gray-600">
-          Question {currentQuestionIndex + 1} of {quiz.questions.length}
-        </div>
-        <div className="mb-6">
-          <p className="mb-4 text-lg font-medium text-gray-800">{currentQuestion.question}</p>
-          {currentQuestion.image && <img src={`http://localhost:3000${currentQuestion.image}`} alt="Question" className="mb-4 rounded-lg" />}
-          <ul className="space-y-2">
-            {currentQuestion.options.map((option, oIndex) => (
-              <li key={oIndex} className="flex items-center">
-                <label className="flex items-center w-full p-2 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200">
+    <div className="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{ fontFamily: '"Work Sans", "Noto Sans", sans-serif' }}>
+      <div className="layout-container flex h-full grow flex-col">
+        <div className="px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 max-w-[960px] flex-1">
+            <div className="flex flex-col gap-3 p-4">
+              <div className="flex gap-6 justify-between">
+                <p className="text-[#181411] text-base font-medium leading-normal">Question {currentQuestionIndex + 1} of {quiz.questions.length}</p>
+              </div>
+              <div className="rounded bg-[#e6e0db]">
+                <div className="h-2 rounded bg-[#181411]" style={{ width: `${progress}%` }}></div>
+              </div>
+            </div>
+            <div className="flex gap-4 py-6 px-4">
+              <div className="flex grow basis-0 flex-col items-stretch gap-4">
+                <div className="flex h-14 grow items-center justify-center rounded-xl px-3 bg-[#f5f2f0]">
+                  <p className="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em]">{Math.floor(remainingTime / 60)}</p>
+                </div>
+                <div className="flex items-center justify-center">
+                  <p className="text-[#181411] text-sm font-normal leading-normal">Minutes</p>
+                </div>
+              </div>
+              <div className="flex grow basis-0 flex-col items-stretch gap-4">
+                <div className="flex h-14 grow items-center justify-center rounded-xl px-3 bg-[#f5f2f0]">
+                  <p className="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em]">{remainingTime % 60}</p>
+                </div>
+                <div className="flex items-center justify-center">
+                  <p className="text-[#181411] text-sm font-normal leading-normal">Seconds</p>
+                </div>
+              </div>
+            </div>
+            <h1 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">{currentQuestion.question}</h1>
+            {currentQuestion.image && <img src={`http://localhost:3000${currentQuestion.image}`} alt="Question" className="mb-4 rounded-lg" />}
+            <div className="flex flex-col gap-3 p-4">
+              {currentQuestion.options.map((option, oIndex) => (
+                <label key={oIndex} className="flex items-center gap-4 rounded-xl border border-solid border-[#e6e0db] p-[15px]">
                   <input
                     type="radio"
+                    className="h-5 w-5 border-2 border-[#e6e0db] bg-transparent text-transparent checked:border-[#181411] checked:bg-[image:--radio-dot-svg] focus:outline-none focus:ring-0 focus:ring-offset-0 checked:focus:border-[#181411]"
                     name={`question-${currentQuestionIndex}`}
                     checked={answers[currentQuestionIndex] === oIndex}
                     onChange={() => handleAnswerChange(oIndex)}
-                    className="mr-2 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <span className="text-gray-700">{option}</span>
+                  <div className="flex grow flex-col">
+                    <p className="text-[#181411] text-sm font-medium leading-normal">{option}</p>
+                  </div>
                 </label>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex justify-between">
-          <button
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-            className="px-4 py-2 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          {currentQuestionIndex === quiz.questions.length - 1 ? (
-            <button
-              onClick={handleSubmitQuiz}
-              className="px-4 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-            >
-              Submit Quiz
-            </button>
-          ) : (
-            <button
-              onClick={handleNextQuestion}
-              className="px-4 py-2 font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              Next
-            </button>
-          )}
+              ))}
+            </div>
+            <div className="flex justify-stretch">
+              <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-end">
+                <button
+                  onClick={handlePreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f5f2f0] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em] disabled:opacity-50"
+                >
+                  <span className="truncate">Previous</span>
+                </button>
+                {currentQuestionIndex === quiz.questions.length - 1 ? (
+                  <button
+                    onClick={handleSubmitQuiz}
+                    className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f2800d] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]"
+                  >
+                    <span className="truncate">Submit Quiz</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f2800d] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]"
+                  >
+                    <span className="truncate">Next</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

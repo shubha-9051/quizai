@@ -174,142 +174,173 @@ function QuizCreation() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-md">
-        <h2 className="mb-6 text-2xl font-semibold text-center text-gray-700">Quiz Creation</h2>
-        <div className="flex justify-end mb-4">
-          <select
-            value={timer}
-            onChange={handleTimerChange}
-            className="px-2 py-1 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            <option value="none">No Timer</option>
-            <option value="10min">10 Minutes</option>
-            <option value="30min">30 Minutes</option>
-            <option value="1hr">1 Hour</option>
-            <option value="2hr">2 Hours</option>
-          </select>
-        </div>
-        <div className="space-y-4">
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleFileUpload}
-            className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="text"
-            placeholder="Question"
-            value={currentQuestion}
-            onChange={handleQuestionChange}
-            required
-            className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          {options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2">
+    <div className="relative flex min-h-screen flex-col bg-white overflow-x-hidden" style={{ fontFamily: '"Work Sans", "Noto Sans", sans-serif' }}>
+      <div className="layout-container flex h-full grow flex-col">
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f5f2f0] px-10 py-3">
+          <div className="flex items-center gap-4 text-[#181411]">
+            <div className="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path></svg>
+            </div>
+            <h2 className="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em]">QuizBee</h2>
+          </div>
+          <div className="flex flex-1 justify-end gap-8">
+            <div className="flex items-center gap-9">
+              <a className="text-[#181411] text-sm font-medium leading-normal" href="#">Home</a>
+              <a className="text-[#181411] text-sm font-medium leading-normal" href="#">Discover</a>
+              <a className="text-[#181411] text-sm font-medium leading-normal" href="#">Create</a>
+            </div>
+            <div className="flex gap-2">
+              <button
+                className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f2800d] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]"
+              >
+                <span className="truncate">Log in</span>
+              </button>
+              <button
+                className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#f5f2f0] text-[#181411] text-sm font-bold leading-normal tracking-[0.015em]"
+              >
+                <span className="truncate">Sign up</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <div className="px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div className="flex flex-wrap justify-between gap-3 p-4">
+              <p className="text-[#181411] text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Create a Quiz</p>
+            </div>
+            <div className="flex space-x-4 px-4 py-3">
+              <select
+                value={timer}
+                onChange={handleTimerChange}
+                className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              >
+                <option value="none">No Timer</option>
+                <option value="10min">10 Minutes</option>
+                <option value="30min">30 Minutes</option>
+                <option value="1hr">1 Hour</option>
+                <option value="2hr">2 Hours</option>
+              </select>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileUpload}
+                className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              />
               <input
                 type="text"
-                placeholder={`Option ${index + 1}`}
-                value={option}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                required
-                className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="Enter prompt to generate questions"
+                value={prompt}
+                onChange={handlePromptChange}
+                className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
-              <input
-                type="radio"
-                name="correctOption"
-                checked={correctOption === index}
-                onChange={() => handleCorrectOptionChange(index)}
-                className="text-indigo-600 border-gray-300 focus:ring-indigo-500"
-              />
-              <span className="text-gray-700">Correct</span>
+              <button
+                type="button"
+                onClick={handleGenerateQuestions}
+                className="px-4 py-2 font-semibold text-black bg-[#f2800d] rounded-lg hover:bg-[#e06c0b] focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              >
+                Generate
+              </button>
             </div>
-          ))}
-          <button
-            type="button"
-            onClick={handleAddOption}
-            className="px-4 py-2 font-semibold text-indigo-500 border border-indigo-500 rounded-lg hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            Add Option
-          </button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="text"
-            placeholder="Enter prompt to generate questions"
-            value={prompt}
-            onChange={handlePromptChange}
-            className="w-full px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          />
-          <button
-            type="button"
-            onClick={handleGenerateQuestions}
-            className="w-full px-4 py-2 font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            Generate Questions from Prompt
-          </button>
-          <button
-            type="button"
-            onClick={handleAddQuestion}
-            className="w-full px-4 py-2 font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            {editIndex !== null ? 'Update Question' : 'Add Question'}
-          </button>
-        </div>
-        <div className="mt-6">
-          <h3 className="mb-4 text-xl font-semibold text-gray-700">Previous Questions</h3>
-          {questions.length === 0 ? (
-            <p className="text-center text-gray-500">No questions added yet</p>
-          ) : (
-            <ul className="space-y-4">
-              {questions.map((question, index) => (
-                <li key={index} className="p-4 bg-gray-100 rounded-lg shadow-sm">
-                  <div className="flex justify-between">
-                    <p className="mb-2 text-lg font-medium text-gray-800">Question {index + 1}: {question.question}</p>
-                    <div className="space-x-2">
-                      <button
-                        onClick={() => handleEditQuestion(index)}
-                        className="px-2 py-1 text-sm font-semibold text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      >
-                        Modify
-                      </button>
-                      <button
-                        onClick={() => handleRemoveQuestion(index)}
-                        className="px-2 py-1 text-sm font-semibold text-red-500 border border-red-500 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                  {question.image && <img src={URL.createObjectURL(question.image)} alt="Question" className="mb-4 rounded-lg" />}
-                  <ul className="space-y-2">
-                    {question.options.map((option, oIndex) => (
-                      <li key={oIndex} className={`flex items-center ${question.correctOption === oIndex ? 'text-green-600' : 'text-gray-700'}`}>
-                        <span>{option}</span>
-                        {question.correctOption === oIndex && <span className="ml-2">(Correct)</span>}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+            <div className="space-y-4 px-4 py-3">
+              <input
+                type="text"
+                placeholder="Question"
+                value={currentQuestion}
+                onChange={handleQuestionChange}
+                required
+                className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              />
+              {options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    placeholder={`Option ${index + 1}`}
+                    value={option}
+                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                    required
+                    className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  />
+                  <input
+                    type="radio"
+                    name="correctOption"
+                    checked={correctOption === index}
+                    onChange={() => handleCorrectOptionChange(index)}
+                    className="text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  />
+                  <span className="text-[#181411]">Correct</span>
+                </div>
               ))}
-            </ul>
-          )}
+              <button
+                type="button"
+                onClick={handleAddOption}
+                className="px-4 py-2 font-semibold text-[#181411] border border-[#f2800d] rounded-lg hover:bg-[#f5f2f0] focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              >
+                Add Option
+              </button>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-4 py-2 text-[#181411] bg-[#f5f2f0] border border-[#f5f2f0] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              />
+              <button
+                type="button"
+                onClick={handleAddQuestion}
+                className="w-full px-4 py-2 font-semibold text-black bg-[#f2800d] rounded-lg hover:bg-[#e06c0b] focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              >
+                {editIndex !== null ? 'Update Question' : 'Add Question'}
+              </button>
+            </div>
+            <div className="mt-6 px-4">
+              <h3 className="mb-4 text-xl font-semibold text-[#181411]">Previous Questions</h3>
+              {questions.length === 0 ? (
+                <p className="text-center text-gray-500">No questions added yet</p>
+              ) : (
+                <ul className="space-y-4">
+                  {questions.map((question, index) => (
+                    <li key={index} className="p-4 bg-[#f5f2f0] rounded-lg shadow-sm">
+                      <div className="flex justify-between">
+                        <p className="mb-2 text-lg font-medium text-[#181411]">Question {index + 1}: {question.question}</p>
+                        <div className="space-x-2">
+                          <button
+                            onClick={() => handleEditQuestion(index)}
+                            className="px-2 py-1 text-sm font-semibold text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          >
+                            Modify
+                          </button>
+                          <button
+                            onClick={() => handleRemoveQuestion(index)}
+                            className="px-2 py-1 text-sm font-semibold text-red-500 border border-red-500 rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-400"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                      {question.image && <img src={URL.createObjectURL(question.image)} alt="Question" className="mb-4 rounded-lg" />}
+                      <ul className="space-y-2">
+                        {question.options.map((option, oIndex) => (
+                          <li key={oIndex} className={`flex items-center ${question.correctOption === oIndex ? 'text-green-600' : 'text-[#181411]'}`}>
+                            <span>{option}</span>
+                            {question.correctOption === oIndex && <span className="ml-2">(Correct)</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleSubmitQuiz}
+              disabled={questions.length === 0}
+              className="w-full px-4 py-2 mt-6 font-semibold text-black bg-[#f2800d] rounded-lg hover:bg-[#e06c0b] focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+            >
+              Submit Quiz
+            </button>
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={handleSubmitQuiz}
-          disabled={questions.length === 0}
-          className="w-full px-4 py-2 mt-6 font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
-        >
-          Submit Quiz
-        </button>
       </div>
     </div>
   );
-}
-
-export default QuizCreation;
+}export default QuizCreation;
