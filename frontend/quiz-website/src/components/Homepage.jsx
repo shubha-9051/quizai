@@ -1,6 +1,8 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Homepage = () => {
+function Homepage() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-[#faf5ef] group/design-root overflow-x-hidden">
       <div className="layout-container flex h-full grow flex-col">
@@ -8,7 +10,7 @@ const Homepage = () => {
           <div className="flex items-center gap-4 text-[#1f1409]">
             <div className="size-4">
               <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor"></path>
+                <path fillRule="evenodd" clipRule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor"></path>
               </svg>
             </div>
             <h2 className="text-[#1f1409] text-lg font-bold leading-tight tracking-[-0.015em]">Quizzy</h2>
@@ -24,11 +26,13 @@ const Homepage = () => {
             <div className="flex gap-2">
               <button
                 className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f2800d] text-[#1f1409] text-sm font-bold leading-normal tracking-[0.015em]"
+                onClick={() => navigate('/login')}
               >
                 <span className="truncate">Log in</span>
               </button>
               <button
                 className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#f4e8dc] text-[#1f1409] text-sm font-bold leading-normal tracking-[0.015em]"
+                onClick={() => navigate('/register')}
               >
                 <span className="truncate">Sign up</span>
               </button>
@@ -40,7 +44,7 @@ const Homepage = () => {
             <div className="@container">
               <div className="@[480px]:p-4">
                 <div
-                  className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
+                  className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-3xl items-start justify-end px-4 pb-10 @[480px]:px-10"
                   style={{
                     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/sdxl10/4d41e93d-132d-4e1f-a6ac-704a9ea1942c.png")`,
                   }}
@@ -58,11 +62,13 @@ const Homepage = () => {
                   <div className="flex-wrap gap-3 flex">
                     <button
                       className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#f2800d] text-[#1f1409] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
+                      onClick={() => navigate('/login')}
                     >
                       <span className="truncate">Log in</span>
                     </button>
                     <button
                       className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#f4e8dc] text-[#1f1409] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
+                      onClick={() => navigate('/register')}
                     >
                       <span className="truncate">Sign up</span>
                     </button>
@@ -116,6 +122,6 @@ const Homepage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Homepage;

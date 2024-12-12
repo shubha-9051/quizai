@@ -9,6 +9,7 @@ import Leaderboard from './components/Leaderboard';
 import TeacherDashboard from './components/TeacherDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Homepage from './components/Homepage';
+import Practice from './components/Practice';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/homepage" />} />
         <Route path="/homepage" element={<Homepage />} />
+        <Route path="/practice" element={< Practice/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/quiz-creation" element={<ProtectedRoute component={QuizCreation} />} />
