@@ -36,9 +36,9 @@ Welcome to the **Quiz App**! This application allows users to take quizzes on va
 
 ## Screenshots 📸
 
-![Home Page](./screenshots/home.png)
-![Quiz Page](./screenshots/quiz.png)
-![Leaderboard](./screenshots/leaderboard.png)
+![Home Page](.screenshots/'Screenshot 2024-12-12 222423.png')
+![Quiz Page](./screenshots/'Screenshot 2024-12-12 222537.png')
+![Login](./screenshots/'Screenshot 2024-12-12 222519.png')
 
 ## Contributing 🤝
 
