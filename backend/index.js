@@ -248,6 +248,6 @@ app.get('/protected', authenticateJWT, (req, res) => {
   res.send('This is a protected route');
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('Server is running on port 3000');
 });
