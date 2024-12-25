@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve static files from the "uploads" directory
 
-mongoose.connect('mongodb://localhost:27017/quizdb');
+mongoose.connect(process.env.URI || 'mongodb+srv://shubhajit2003:9P24a7KVrFPIzGLT@cluster0.tu2ei.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0b');
 
 // User Schema
 const userSchema = new mongoose.Schema({
